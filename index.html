@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InstaWorld</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#000;color:#fff;max-width:480px;margin:auto}
+header{display:flex;justify-content:space-between;align-items:center;padding:12px 15px;border-bottom:1px solid #222;position:sticky;top:0;background:#000;z-index:10}
+header b{font-size:22px;font-family:cursive}
+header span{font-size:20px}
+.stories{display:flex;gap:12px;overflow-x:auto;padding:12px;border-bottom:1px solid #222}
+.story{text-align:center;flex-shrink:0}
+.story img{width:62px;height:62px;border-radius:50%;border:3px solid #ff2d55;object-fit:cover}
+.story p{font-size:11px;margin-top:4px}
+.post{border-bottom:1px solid #222;padding-bottom:12px}
+.post-top{display:flex;align-items:center;gap:10px;padding:10px}
+.post-top img{width:38px;height:38px;border-radius:50%;object-fit:cover}
+.post-top b{font-size:14px}
+.post-top small{color:#aaa;font-size:11px}
+.post img.main{width:100%;height:380px;object-fit:cover}
+.actions{display:flex;gap:15px;padding:10px;font-size:22px}
+.actions span{cursor:pointer}
+.likes{padding:0 10px;font-size:14px;font-weight:bold}
+.caption{padding:4px 10px;font-size:14px}
+.comments{padding:4px 10px;color:#aaa;font-size:13px}
+.add-comment{display:flex;gap:8px;padding:10px}
+.add-comment input{flex:1;background:#111;border:1px solid #333;color:#fff;padding:8px;border-radius:20px;outline:none}
+.add-comment button{background:#0095f6;color:#fff;border:none;padding:8px 14px;border-radius:20px;font-weight:bold}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#000;border-top:1px solid #222;display:flex;justify-content:space-around;padding:12px;font-size:22px}
+.upload{background:#111;margin:10px;border-radius:12px;padding:12px;text-align:center;border:1px dashed #444}
+.upload button{background:#0095f6;color:#fff;border:none;padding:10px 18px;border-radius:20px;font-weight:bold;margin-top:8px}
+</style>
+</head>
+<body>
+<header><b>InstaWorld 🌍</b><span>❤️ 💬 ✈️</span></header>
+
+<div class="stories" id="stories"></div>
+
+<div class="upload">
+<p>📸 Share your moment</p>
+<button onclick="alert('Pick photo from your phone to post! Coming in full version')">+ New Post</button>
+</div>
+
+<div id="feed"></div>
+<div style="height:70px"></div>
+<nav><span>🏠</span><span>🔍</span><span>➕</span><span>🎬</span><span onclick="showProfile()">👤</span></nav>
+
+<script>
+Telegram.WebApp.ready();
+Telegram.WebApp.expand();
+let users=[
+{name:"kingslley",img:"https://i.pravatar.cc/150?img=12",pic:"https://picsum.photos/500/500?random=1",cap:"Welcome to InstaWorld! My first post 🔥",likes:128},
+{name:"ada_love",img:"https://i.pravatar.cc/150?img=47",pic:"https://picsum.photos/500/500?random=2",cap:"Lagos vibes today 😍",likes:342},
+{name:"tunde_b",img:"https://i.pravatar.cc/150?img=33",pic:"https://picsum.photos/500/500?random=3",cap:"New fit, who dis? 💯",likes:89},
+{name:"chioma_x",img:"https://i.pravatar.cc/150?img=45",pic:"https://picsum.photos/500/500?random=4",cap:"Food is life 🍔",likes:512},
+];
+let storiesDiv=document.getElementById('stories');
+users.forEach(u=>{
+storiesDiv.innerHTML+=`<div class="story"><img src="${u.img}"><p>${u.name}</p></div>`;
+});
+storiesDiv.innerHTML=`<div class="story"><img src="https://i.pravatar.cc/150?img=12"><p>Your story</p></div>`+storiesDiv.innerHTML;
+
+let feed=document.getElementById('feed');
+users.forEach((u,i)=>{
+feed.innerHTML+=`
+<div class="post">
+<div class="post-top"><img src="${u.img}"><div><b>${u.name}</b><br><small>Agbor, Delta • 2h</small></div><span style="margin-left:auto">...</span></div>
+<img class="main" src="${u.pic}">
+<div class="actions"><span id="heart${i}" onclick="like(${i},${u.likes})">🤍</span><span>💬</span><span>✈️</span><span style="margin-left:auto">🔖</span></div>
+<div class="likes" id="likeCount${i}">${u.likes} likes</div>
+<div class="caption"><b>${u.name}</b> ${u.cap}</div>
+<div class="comments">View all comments</div>
+<div class="add-comment"><input id="c${i}" placeholder="Add a comment..."><button onclick="comment(${i})">Post</button></div>
+</div>`;
+});
+let liked={};
+function like(i,base){
+liked[i]=!liked[i];
+document.getElementById('heart'+i).innerText=liked[i]?'❤️':'🤍';
+document.getElementById('likeCount'+i).innerText=(base+(liked[i]?1:0))+' likes';
+}
+function comment(i){
+let v=document.getElementById('c'+i).value;
+if(v){alert('You commented: '+v);document.getElementById('c'+i).value='';}
+}
+function showProfile(){
+alert('Profile: @kingslley\nPosts: 4 • Followers: 1.2k • Following: 180\nInstaWorld - Made for Telegram');
+}
+</script>
+</body>
+</html>
